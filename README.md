@@ -45,10 +45,29 @@ CREATE TABLE codigos (
 );
 ```
 
-3. Configurar el archivo `application.properties`:
+3. Configurar variables de entorno:
 
-```properties
-spring.datasource.password=TU_PASSWORD_AQUI
+```bash
+# Copiar el archivo de ejemplo
+cp .env.example .env
+
+# Editar .env con tus credenciales reales
+nano .env
+```
+
+Variables requeridas:
+- `DB_PASSWORD`: Contraseña de MySQL (obligatorio)
+- `DB_USERNAME`: Usuario de MySQL (por defecto: codegodot_user)
+- `DB_URL`: URL de conexión (por defecto: jdbc:mysql://localhost:3306/codegodot_db)
+- `SERVER_PORT`: Puerto del servidor (por defecto: 8080)
+
+4. Cargar las variables de entorno antes de ejecutar:
+
+```bash
+# Linux/Mac
+export $(cat .env | xargs)
+
+# O usar spring-boot-dotenv (recomendado para desarrollo)
 ```
 
 ## 🏃 Ejecutar el proyecto
@@ -76,7 +95,7 @@ src/main/java/com/proyect/codegodot/
 
 ## 🔧 Próximos pasos
 
-- [ ] Implementar entidades y repositorios
+- [x] Implementar entidades y repositorios
 - [ ] Crear servicios de negocio
 - [ ] Desarrollar controladores REST
 - [ ] Agregar manejo de excepciones
