@@ -1,5 +1,7 @@
 package com.proyect.codegodot.Service;
 
+import com.proyect.codegodot.Controller.BadRequestException;
+import com.proyect.codegodot.Controller.ResourceNotFoundException;
 import com.proyect.codegodot.Model.Codigo;
 import com.proyect.codegodot.Model.CodigoDTO;
 import com.proyect.codegodot.Repository.CodigoRepository;
@@ -40,7 +42,7 @@ public class CodigoServiceImpl implements CodigoService {
         Codigo codigo = codigoRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Código con ID {} no encontrado", id);
-                    return new RuntimeException("Código no encontrado con ID: " + id);
+                    return new ResourceNotFoundException("Código no encontrado con ID: " + id);
                 });
         return codigoMapper.toDTO(codigo);
     }
@@ -52,13 +54,13 @@ public class CodigoServiceImpl implements CodigoService {
         
         // Validaciones
         if (codigoDTO.getTitulo() == null || codigoDTO.getTitulo().trim().isEmpty()) {
-            throw new IllegalArgumentException("El título es obligatorio");
+            throw new BadRequestException("El título es obligatorio");
         }
         if (codigoDTO.getDescripcion() == null || codigoDTO.getDescripcion().trim().isEmpty()) {
-            throw new IllegalArgumentException("La descripción es obligatoria");
+            throw new BadRequestException("La descripción es obligatoria");
         }
         if (codigoDTO.getCodigo() == null || codigoDTO.getCodigo().trim().isEmpty()) {
-            throw new IllegalArgumentException("El código es obligatorio");
+            throw new BadRequestException("El código es obligatorio");
         }
 
         Codigo codigo = codigoMapper.toEntity(codigoDTO);
@@ -76,18 +78,18 @@ public class CodigoServiceImpl implements CodigoService {
         Codigo codigoExistente = codigoRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Código con ID {} no encontrado para actualizar", id);
-                    return new RuntimeException("Código no encontrado con ID: " + id);
+                    return new ResourceNotFoundException("Código no encontrado con ID: " + id);
                 });
 
         // Validaciones
         if (codigoDTO.getTitulo() == null || codigoDTO.getTitulo().trim().isEmpty()) {
-            throw new IllegalArgumentException("El título es obligatorio");
+            throw new BadRequestException("El título es obligatorio");
         }
         if (codigoDTO.getDescripcion() == null || codigoDTO.getDescripcion().trim().isEmpty()) {
-            throw new IllegalArgumentException("La descripción es obligatoria");
+            throw new BadRequestException("La descripción es obligatoria");
         }
         if (codigoDTO.getCodigo() == null || codigoDTO.getCodigo().trim().isEmpty()) {
-            throw new IllegalArgumentException("El código es obligatorio");
+            throw new BadRequestException("El código es obligatorio");
         }
 
         // Actualizar campos
@@ -109,7 +111,7 @@ public class CodigoServiceImpl implements CodigoService {
         
         if (!codigoRepository.existsById(id)) {
             log.error("Código con ID {} no encontrado para eliminar", id);
-            throw new RuntimeException("Código no encontrado con ID: " + id);
+            throw new ResourceNotFoundException("Código no encontrado con ID: " + id);
         }
 
         codigoRepository.deleteById(id);
@@ -122,7 +124,7 @@ public class CodigoServiceImpl implements CodigoService {
         log.info("Buscando códigos por título: {}", titulo);
         
         if (titulo == null || titulo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El término de búsqueda no puede estar vacío");
+            throw new BadRequestException("El término de búsqueda no puede estar vacío");
         }
 
         return codigoRepository.findByTituloContainingIgnoreCase(titulo)
