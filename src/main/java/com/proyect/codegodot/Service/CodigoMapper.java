@@ -25,9 +25,12 @@ public class CodigoMapper {
         dto.setId(entity.getId());
         dto.setTitulo(entity.getTitulo());
         dto.setDescripcion(entity.getDescripcion());
+        dto.setCategoria(entity.getCategoria());
+        dto.setFecha(entity.getFecha());
+        dto.setAutor(entity.getAutor());
+        dto.setLikes(entity.getLikes());
+        dto.setGuardados(entity.getGuardados());
         dto.setCodigo(entity.getCodigo());
-        dto.setFechaCreacion(entity.getFechaCreacion());
-        dto.setFechaActualizacion(entity.getFechaActualizacion());
 
         return dto;
     }
@@ -46,8 +49,12 @@ public class CodigoMapper {
         entity.setId(dto.getId());
         entity.setTitulo(dto.getTitulo());
         entity.setDescripcion(dto.getDescripcion());
+        entity.setCategoria(dto.getCategoria());
+        entity.setFecha(dto.getFecha());
+        entity.setAutor(dto.getAutor());
+        entity.setLikes(dto.getLikes() != null ? dto.getLikes() : 0);
+        entity.setGuardados(dto.getGuardados() != null ? dto.getGuardados() : 0);
         entity.setCodigo(dto.getCodigo());
-        // Las fechas se manejan automáticamente con @CreationTimestamp y @UpdateTimestamp
 
         return entity;
     }

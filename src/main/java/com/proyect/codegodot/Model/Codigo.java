@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 /**
  * Entidad JPA que representa un código de Godot Engine (GDScript)
@@ -30,14 +26,21 @@ public class Codigo {
     @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "codigo", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "categoria", length = 100)
+    private String categoria;
+
+    @Column(name = "fecha", length = 50)
+    private String fecha;
+
+    @Column(name = "autor", length = 100)
+    private String autor;
+
+    @Column(name = "likes")
+    private Integer likes = 0;
+
+    @Column(name = "guardados")
+    private Integer guardados = 0;
+
+    @Column(name = "codigo", columnDefinition = "LONGTEXT")
     private String codigo;
-
-    @CreationTimestamp
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
-    private LocalDateTime fechaCreacion;
-
-    @UpdateTimestamp
-    @Column(name = "fecha_actualizacion", nullable = false)
-    private LocalDateTime fechaActualizacion;
 }
