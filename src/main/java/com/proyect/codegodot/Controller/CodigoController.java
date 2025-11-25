@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/codigos")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*") // Permitir CORS para desarrollo con React
 public class CodigoController {
 
     private final CodigoService codigoService;
