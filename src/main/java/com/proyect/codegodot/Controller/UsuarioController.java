@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyect.codegodot.Model.Usuario;
@@ -52,15 +53,42 @@ public class UsuarioController {
         UsuarioDTO usuarioCreado = usuarioService.crearUsuario(usuario);
         return ResponseEntity.status(201).body(usuarioCreado);
     }
+
+    /**
+     * POST /api/usuarios/login
+     * Login de usuario - retorna datos del usuario si credenciales son válidas
+     */
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioDTO> login(@RequestBody Usuario loginRequest) {
+        UsuarioDTO usuario = usuarioService.login(loginRequest.getUsername(), loginRequest.getCorreo(), loginRequest.getPassword());
+        return ResponseEntity.ok(usuario);
+    }
     
     /**
      * PUT /api/usuarios/{username}
-     * Actualizar usuario
+     * Actualizar usuario - Acepta JSON, form-urlencoded y multipart/form-data
      */
-    @PutMapping("/{username}")
+    @PutMapping(value = "/{username}")
     public ResponseEntity<UsuarioDTO> actualizarUsuario(
             @PathVariable String username,
-            @RequestBody Usuario usuarioActualizado) {
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String apellidoPaterno,
+            @RequestParam(required = false) String apellidoMaterno,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String telefono,
+            @RequestParam(required = false) String fotoUrl,
+            @RequestParam(name = "username", required = false) String nuevoUsername) {
+        
+        // Crear objeto Usuario con los parámetros que fueron enviados
+        Usuario usuarioActualizado = new Usuario();
+        if (nombre != null) usuarioActualizado.setNombre(nombre);
+        if (apellidoPaterno != null) usuarioActualizado.setApellidoPaterno(apellidoPaterno);
+        if (apellidoMaterno != null) usuarioActualizado.setApellidoMaterno(apellidoMaterno);
+        if (correo != null) usuarioActualizado.setCorreo(correo);
+        if (telefono != null) usuarioActualizado.setTelefono(telefono);
+        if (fotoUrl != null) usuarioActualizado.setFotoUrl(fotoUrl);
+        if (nuevoUsername != null) usuarioActualizado.setUsername(nuevoUsername);
+        
         UsuarioDTO usuarioUpdated = usuarioService.actualizarUsuario(username, usuarioActualizado);
         return ResponseEntity.ok(usuarioUpdated);
     }

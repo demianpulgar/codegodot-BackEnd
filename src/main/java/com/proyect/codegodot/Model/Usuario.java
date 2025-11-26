@@ -42,7 +42,7 @@ public class Usuario {
     @Column(name = "telefono")
     private String telefono;
     
-    @Column(name = "foto_url")
+    @Column(name = "foto_url", columnDefinition = "LONGTEXT")
     private String fotoUrl;
     
     @Column(name = "fecha_registro")

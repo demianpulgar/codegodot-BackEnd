@@ -86,7 +86,12 @@ public class UsuarioService {
             usuario.setTelefono(usuarioActualizado.getTelefono());
         }
         if (usuarioActualizado.getFotoUrl() != null) {
-            usuario.setFotoUrl(usuarioActualizado.getFotoUrl());
+            // Validar tamaño de foto (máximo 500KB base64)
+            String fotoUrl = usuarioActualizado.getFotoUrl();
+            if (fotoUrl.length() > 700000) { // ~500KB en base64
+                throw new IllegalArgumentException("La foto es demasiado grande. Máximo 500KB");
+            }
+            usuario.setFotoUrl(fotoUrl);
         }
         
         // No permitir cambio de correo sin validación
@@ -127,5 +132,32 @@ public class UsuarioService {
      */
     public boolean usernameExists(String username) {
         return usuarioRepository.existsByUsername(username);
+    }
+
+    /**
+     * Login de usuario - validar credenciales
+     * Retorna datos del usuario si las credenciales son correctas
+     */
+    public UsuarioDTO login(String username, String correo, String password) {
+        // Buscar usuario por username o correo
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseGet(() -> {
+                    // Si no encuentra por username, intenta por correo
+                    return usuarioRepository.findByCorreo(correo)
+                            .orElse(null);
+                });
+        
+        // Validar que existe el usuario
+        if (usuario == null) {
+            throw new ResourceNotFoundException("Usuario o correo no encontrado");
+        }
+        
+        // Validar contraseña
+        if (!usuario.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Contraseña incorrecta");
+        }
+        
+        // Retornar datos del usuario (sin password)
+        return convertirADTO(usuario);
     }
 }
