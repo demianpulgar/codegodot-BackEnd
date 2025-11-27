@@ -1,6 +1,11 @@
 package com.proyect.codegodot.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,10 +41,10 @@ public class Codigo {
     private String autor;
 
     @Column(name = "likes")
-    private Integer likes = 0;
+    private Integer likes;
 
     @Column(name = "guardados")
-    private Integer guardados = 0;
+    private Integer guardados;
 
     @Column(name = "codigo", columnDefinition = "LONGTEXT")
     private String codigo;

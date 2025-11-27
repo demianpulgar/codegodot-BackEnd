@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyect.codegodot.Model.CodigoDTO;
+import com.proyect.codegodot.Model.ReactionUpdateRequest;
 import com.proyect.codegodot.Service.CodigoService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,18 @@ public class CodigoController {
     public ResponseEntity<List<CodigoDTO>> obtenerTodos() {
         log.info("GET /api/codigos - Obteniendo todos los códigos");
         List<CodigoDTO> codigos = codigoService.obtenerTodos();
+        return ResponseEntity.ok(codigos);
+    }
+
+    /**
+     * GET /api/codigos/search?titulo=xyz
+     * Busca códigos por título
+     * ⚠️ DEBE IR ANTES DE /{id} para evitar conflicto de rutas
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<CodigoDTO>> buscarPorTitulo(@RequestParam String titulo) {
+        log.info("GET /api/codigos/search?titulo={} - Buscando códigos por título", titulo);
+        List<CodigoDTO> codigos = codigoService.buscarPorTitulo(titulo);
         return ResponseEntity.ok(codigos);
     }
 
@@ -90,13 +103,26 @@ public class CodigoController {
     }
 
     /**
-     * GET /api/codigos/search?titulo=xyz
-     * Busca códigos por título
+     * POST /api/codigos/{id}/likes
+     * Incrementa o decrementa el contador de likes
      */
-    @GetMapping("/search")
-    public ResponseEntity<List<CodigoDTO>> buscarPorTitulo(@RequestParam String titulo) {
-        log.info("GET /api/codigos/search?titulo={} - Buscando códigos por título", titulo);
-        List<CodigoDTO> codigos = codigoService.buscarPorTitulo(titulo);
-        return ResponseEntity.ok(codigos);
+    @PostMapping("/{id}/likes")
+    public ResponseEntity<CodigoDTO> actualizarLikes(@PathVariable Long id,
+            @RequestBody ReactionUpdateRequest request) {
+        log.info("POST /api/codigos/{}/likes - increment? {}", id, request.isIncrement());
+        CodigoDTO actualizado = codigoService.actualizarLikes(id, request.isIncrement());
+        return ResponseEntity.ok(actualizado);
+    }
+
+    /**
+     * POST /api/codigos/{id}/guardados
+     * Incrementa o decrementa el contador de guardados
+     */
+    @PostMapping("/{id}/guardados")
+    public ResponseEntity<CodigoDTO> actualizarGuardados(@PathVariable Long id,
+            @RequestBody ReactionUpdateRequest request) {
+        log.info("POST /api/codigos/{}/guardados - increment? {}", id, request.isIncrement());
+        CodigoDTO actualizado = codigoService.actualizarGuardados(id, request.isIncrement());
+        return ResponseEntity.ok(actualizado);
     }
 }

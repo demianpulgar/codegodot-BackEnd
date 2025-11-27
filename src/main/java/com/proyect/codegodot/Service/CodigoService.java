@@ -1,8 +1,8 @@
 package com.proyect.codegodot.Service;
 
-import com.proyect.codegodot.Model.CodigoDTO;
-
 import java.util.List;
+
+import com.proyect.codegodot.Model.CodigoDTO;
 
 /**
  * Interface del servicio de Codigo
@@ -50,4 +50,20 @@ public interface CodigoService {
      * @return Lista de códigos que coinciden con la búsqueda
      */
     List<CodigoDTO> buscarPorTitulo(String titulo);
+
+    /**
+     * Actualiza el contador de likes
+     * @param id ID del código
+     * @param increment true para sumar, false para restar
+     * @return Código actualizado
+     */
+    CodigoDTO actualizarLikes(Long id, boolean increment);
+
+    /**
+     * Actualiza el contador de guardados
+     * @param id ID del código
+     * @param increment true para sumar, false para restar
+     * @return Código actualizado
+     */
+    CodigoDTO actualizarGuardados(Long id, boolean increment);
 }

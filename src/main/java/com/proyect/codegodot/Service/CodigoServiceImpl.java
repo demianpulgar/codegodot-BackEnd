@@ -1,17 +1,20 @@
 package com.proyect.codegodot.Service;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.proyect.codegodot.Controller.BadRequestException;
 import com.proyect.codegodot.Controller.ResourceNotFoundException;
 import com.proyect.codegodot.Model.Codigo;
 import com.proyect.codegodot.Model.CodigoDTO;
 import com.proyect.codegodot.Repository.CodigoRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implementación del servicio de Codigo
@@ -131,5 +134,37 @@ public class CodigoServiceImpl implements CodigoService {
                 .stream()
                 .map(codigoMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CodigoDTO actualizarLikes(Long id, boolean increment) {
+        Codigo codigo = obtenerCodigoOrThrow(id);
+        int currentLikes = codigo.getLikes() != null ? codigo.getLikes() : 0;
+        int nuevoValor = increment ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+        codigo.setLikes(nuevoValor);
+        codigoRepository.save(codigo);
+        log.info("Likes actualizados para código {}: {}", id, nuevoValor);
+        return codigoMapper.toDTO(codigo);
+    }
+
+    @Override
+    @Transactional
+    public CodigoDTO actualizarGuardados(Long id, boolean increment) {
+        Codigo codigo = obtenerCodigoOrThrow(id);
+        int currentSaves = codigo.getGuardados() != null ? codigo.getGuardados() : 0;
+        int nuevoValor = increment ? currentSaves + 1 : Math.max(0, currentSaves - 1);
+        codigo.setGuardados(nuevoValor);
+        codigoRepository.save(codigo);
+        log.info("Guardados actualizados para código {}: {}", id, nuevoValor);
+        return codigoMapper.toDTO(codigo);
+    }
+
+    private Codigo obtenerCodigoOrThrow(Long id) {
+        Objects.requireNonNull(id, "El ID no puede ser nulo");
+        return codigoRepository.findById(id).orElseThrow(() -> {
+            log.error("Código con ID {} no encontrado", id);
+            return new ResourceNotFoundException("Código no encontrado con ID: " + id);
+        });
     }
 }

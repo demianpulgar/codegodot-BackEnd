@@ -160,4 +160,14 @@ public class UsuarioService {
         // Retornar datos del usuario (sin password)
         return convertirADTO(usuario);
     }
+
+    /**
+     * Obtener lista de todos los usuarios (sin contraseña)
+     */
+    public java.util.List<UsuarioDTO> obtenerTodos() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
 }
